@@ -9,10 +9,9 @@ load_dotenv()
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
 GEMINI_URL = f"https://generativelanguage.googleapis.com/v1/models/gemini-pro:generateContent?key={GEMINI_API_KEY}"
 
-
 app = FastAPI()
 
-# CORS for frontend testing
+# CORS
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -24,7 +23,7 @@ app.add_middleware(
 async def translate(request: Request):
     data = await request.json()
     input_text = data.get("text")
-    target_languages = data.get("languages", [])  # List of language names like 'Hindi', 'Telugu'
+    target_languages = data.get("languages", [])
 
     if not input_text or not target_languages:
         return {"error": "Missing 'text' or 'languages' field."}
@@ -45,3 +44,4 @@ async def translate(request: Request):
     async with httpx.AsyncClient() as client:
         response = await client.post(GEMINI_URL, json=payload)
         return response.json()
+
